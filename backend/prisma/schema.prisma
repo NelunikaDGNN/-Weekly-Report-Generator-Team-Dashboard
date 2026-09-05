@@ -1,0 +1,160 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  TEAM_MEMBER
+  MANAGER
+}
+
+enum ReportStatus {
+  DRAFT
+  SUBMITTED
+  NEEDS_CORRECTION
+  APPROVED
+}
+
+enum Priority {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum TaskType {
+  DEVELOPMENT
+  TESTING
+  MEETINGS
+  DOCUMENTATION
+  OTHER
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         Role     @default(TEAM_MEMBER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  reports         WeeklyReport[]
+  reviewedVersions ReportVersion[] @relation("Reviewer")
+  projectLinks    UserProject[]
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  reports      WeeklyReport[]
+  memberLinks  UserProject[]
+}
+
+model UserProject {
+  id        String  @id @default(cuid())
+  userId    String
+  projectId String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, projectId])
+}
+
+model WeeklyReport {
+  id                  String       @id @default(cuid())
+  userId              String
+  projectId           String
+  weekStartDate       DateTime
+  weekEndDate         DateTime
+  status              ReportStatus @default(DRAFT)
+  currentReviewComment String?
+  optionalNotes       String?
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+
+  user      User      @relation(fields: [userId], references: [id])
+  project   Project   @relation(fields: [projectId], references: [id])
+
+  tasksCompleted TaskCompleted[]
+  tasksPlanned   TaskPlanned[]
+  blockers       Blocker[]
+  achievements   Achievement[]
+  hourBreakdown  HourBreakdown[]
+  versions       ReportVersion[]
+
+  @@unique([userId, weekStartDate])
+}
+
+model TaskCompleted {
+  id                String   @id @default(cuid())
+  reportId          String
+  taskName          String
+  priority          Priority
+  plannedPercentage Int
+  actualPercentage  Int
+  status            String
+  timePlannedHours  Float
+  timeSpentHours    Float
+  outputDeliverable String?
+
+  report WeeklyReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+}
+
+model TaskPlanned {
+  id          String   @id @default(cuid())
+  reportId    String
+  description String
+  priority    Priority
+
+  report WeeklyReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+}
+
+model Blocker {
+  id          String  @id @default(cuid())
+  reportId    String
+  description String
+  isKeyIssue  Boolean @default(false)
+
+  report WeeklyReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+}
+
+model Achievement {
+  id               String  @id @default(cuid())
+  reportId         String
+  description      String
+  isKeyAchievement Boolean @default(false)
+
+  report WeeklyReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+}
+
+model HourBreakdown {
+  id       String   @id @default(cuid())
+  reportId String
+  taskType TaskType
+  hours    Float
+
+  report WeeklyReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+}
+
+model ReportVersion {
+  id             String   @id @default(cuid())
+  reportId       String
+  versionNumber  Int
+  snapshotData   Json
+  managerComment String?
+  reviewerId     String?
+  submittedAt    DateTime @default(now())
+
+  report   WeeklyReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  reviewer User?        @relation("Reviewer", fields: [reviewerId], references: [id])
+
+  @@unique([reportId, versionNumber])
+}
