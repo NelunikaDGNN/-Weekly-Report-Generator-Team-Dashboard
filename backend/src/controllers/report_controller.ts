@@ -9,10 +9,15 @@ import {
   submitReport,
   reviewReport,
   getReportVersions, 
-  getTeamReports
+  getTeamReports,
+  getDashboardSummary,
+  getStatusByMember,
+  getWorkloadByProject,
+  getTimeByTaskType,
+  getTasksCompletedTrend,
+  getRecentActivity,
 
 } from '../services/report_service';
-
 
 const taskCompletedSchema = z.object({
   taskName: z.string(),
@@ -156,4 +161,35 @@ export async function teamReports(req: AuthRequest, res: Response) {
   } catch (err: any) {
     res.status(500).json({ error: 'Failed to fetch team reports' });
   }
+}
+
+
+export async function dashboardSummary(req: AuthRequest, res: Response) {
+  try {
+    const { weekStartDate } = req.query;
+    const summary = await getDashboardSummary(weekStartDate as string | undefined);
+    res.json(summary);
+  } catch (err: any) {
+    res.status(500).json({ error: 'Failed to fetch dashboard summary' });
+  }
+}
+
+export async function statusByMember(req: AuthRequest, res: Response) {
+  res.json(await getStatusByMember());
+}
+
+export async function workloadByProject(req: AuthRequest, res: Response) {
+  res.json(await getWorkloadByProject());
+}
+
+export async function timeByTaskType(req: AuthRequest, res: Response) {
+  res.json(await getTimeByTaskType());
+}
+
+export async function tasksCompletedTrend(req: AuthRequest, res: Response) {
+  res.json(await getTasksCompletedTrend());
+}
+
+export async function recentActivity(req: AuthRequest, res: Response) {
+  res.json(await getRecentActivity());
 }

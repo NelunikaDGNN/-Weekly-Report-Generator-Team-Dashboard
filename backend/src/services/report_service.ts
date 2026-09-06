@@ -192,5 +192,129 @@ export async function getTeamReports(filters: {
   });
 }
 
+export async function getDashboardSummary(weekStartDate?: string) {
+  // Default to the start of the current week (Sunday) if not specified
+  let targetWeek: Date;
+  if (weekStartDate) {
+    targetWeek = new Date(weekStartDate);
+  } else {
+    targetWeek = new Date();
+    targetWeek.setDate(targetWeek.getDate() - targetWeek.getDay());
+    targetWeek.setHours(0, 0, 0, 0);
+  }
+
+  const totalMembers = await prisma.user.count({ where: { role: 'TEAM_MEMBER' } });
+
+  const reports = await prisma.weeklyReport.findMany({
+    where: { weekStartDate: targetWeek },
+    include: { blockers: true },
+  });
+
+  const submittedStatuses = ['SUBMITTED', 'NEEDS_CORRECTION', 'APPROVED'];
+  const submittedMemberIds = new Set(
+    reports.filter((r) => submittedStatuses.includes(r.status)).map((r) => r.userId)
+  );
+
+  const needsCorrectionCount = reports.filter((r) => r.status === 'NEEDS_CORRECTION').length;
+  const draftCount = reports.filter((r) => r.status === 'DRAFT').length;
+  const openBlockersCount = reports.reduce((sum, r) => sum + r.blockers.length, 0);
+
+  const submittedCount = submittedMemberIds.size;
+  const pendingCount = Math.max(totalMembers - reports.length, 0);
+  const complianceRate = totalMembers > 0 ? Math.round((submittedCount / totalMembers) * 100) : 0;
+
+  return {
+    weekStartDate: targetWeek,
+    totalReportsSubmitted: submittedCount,
+    complianceRate,
+    needsCorrectionCount,
+    openBlockersCount,
+    draftCount,
+    pendingCount,
+    totalMembers,
+  };
+}
+
+
+export async function getStatusByMember() {
+  const members = await prisma.user.findMany({
+    where: { role: 'TEAM_MEMBER' },
+    include: {
+      reports: {
+        select: { status: true },
+      },
+    },
+  });
+
+  return members.map((m) => {
+    const counts = { DRAFT: 0, SUBMITTED: 0, NEEDS_CORRECTION: 0, APPROVED: 0 };
+    m.reports.forEach((r) => { counts[r.status]++; });
+    return { memberId: m.id, memberName: m.name, ...counts };
+  });
+}
+
+export async function getWorkloadByProject() {
+  const projects = await prisma.project.findMany({
+    include: {
+      reports: {
+        include: { tasksCompleted: true },
+      },
+    },
+  });
+
+  return projects.map((p) => ({
+    projectId: p.id,
+    projectName: p.name,
+    taskCount: p.reports.reduce((sum, r) => sum + r.tasksCompleted.length, 0),
+    reportCount: p.reports.length,
+  }));
+}
+
+export async function getTimeByTaskType() {
+  const breakdowns = await prisma.hourBreakdown.groupBy({
+    by: ['taskType'],
+    _sum: { hours: true },
+  });
+
+  return breakdowns.map((b) => ({
+    taskType: b.taskType,
+    totalHours: b._sum.hours ?? 0,
+  }));
+}
+
+export async function getTasksCompletedTrend() {
+  const reports = await prisma.weeklyReport.findMany({
+    select: {
+      weekStartDate: true,
+      tasksCompleted: { select: { id: true } },
+    },
+    orderBy: { weekStartDate: 'asc' },
+  });
+
+  const trendMap = new Map<string, number>();
+  reports.forEach((r) => {
+    const key = r.weekStartDate.toISOString().split('T')[0];
+    trendMap.set(key, (trendMap.get(key) ?? 0) + r.tasksCompleted.length);
+  });
+
+  return Array.from(trendMap.entries()).map(([week, count]) => ({ week, tasksCompleted: count }));
+}
+
+export async function getRecentActivity() {
+  const recentReports = await prisma.weeklyReport.findMany({
+    orderBy: { updatedAt: 'desc' },
+    take: 10,
+    include: { user: { select: { name: true } }, project: { select: { name: true } } },
+  });
+
+  return recentReports.map((r) => ({
+    reportId: r.id,
+    memberName: r.user.name,
+    projectName: r.project.name,
+    status: r.status,
+    updatedAt: r.updatedAt,
+  }));
+}
+
 
 
