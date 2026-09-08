@@ -1,77 +1,92 @@
 .review-page {
-  max-width: 900px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.review-page h2 {
+  font-size: clamp(1.8rem, 2vw, 2.5rem);
 }
 
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 16px;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .subtitle {
-  color: #64748b;
-  margin: 4px 0 0;
+  color: var(--muted-text-color);
+  margin: 0.35rem 0 0;
 }
 
 .section-card {
-  padding: 20px;
-  margin-bottom: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .info-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  margin-bottom: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 .label {
   display: block;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
-  color: #94a3b8;
-  font-weight: 600;
-  margin-bottom: 2px;
+  color: var(--muted-text-color);
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
 }
 
 .task-item {
-  margin-bottom: 12px;
+  margin-bottom: 0.9rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.task-item:last-child {
+  border-bottom: none;
 }
 
 .task-header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 4px;
+  gap: 0.8rem;
+  margin-bottom: 0.45rem;
 }
 
 .task-meta {
   display: flex;
-  gap: 16px;
-  font-size: 0.85rem;
-  color: #64748b;
-  margin-bottom: 4px;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.86rem;
+  color: var(--muted-text-color);
+  margin-bottom: 0.4rem;
 }
 
 .output {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   color: #475569;
   font-style: italic;
+  margin: 0;
 }
 
 .priority-chip {
   font-size: 0.7rem;
-  min-height: 20px;
+  min-height: 22px;
 }
 
 ul {
-  padding-left: 20px;
+  padding-left: 1.2rem;
   margin: 0;
 }
 
 li {
-  margin-bottom: 6px;
+  margin-bottom: 0.6rem;
 }
 
 .key-item {
@@ -79,34 +94,39 @@ li {
 }
 
 .key-tag {
+  display: inline-block;
   font-size: 0.7rem;
-  background: #fef3c7;
-  color: #b45309;
-  padding: 2px 8px;
-  border-radius: 10px;
-  margin-left: 6px;
+  background: var(--warning-soft);
+  color: var(--warning-color);
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  margin-left: 0.4rem;
+  font-weight: 700;
 }
 
 .hours-list {
   display: flex;
-  gap: 10px;
+  gap: 0.6rem;
   flex-wrap: wrap;
 }
 
 .hour-chip {
-  background: #f1f5f9;
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 0.85rem;
+  background: var(--surface-alt);
+  border: 1px solid var(--border-color);
+  padding: 0.42rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
 }
 
 .review-actions-card {
-  border: 2px solid #3b82f6;
+  border: 1px solid rgba(36, 87, 214, 0.2);
+  background: linear-gradient(180deg, rgba(36, 87, 214, 0.02), rgba(36, 87, 214, 0.01));
 }
 
 .decision-buttons {
   display: flex;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
 .full-width {
@@ -117,36 +137,52 @@ li {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
+  margin-top: 1rem;
 }
 
 .actions-bar {
-  margin-top: 24px;
-  margin-bottom: 40px;
+  margin-top: 2rem;
+  margin-bottom: 3rem;
 }
 
 .alert {
-  padding: 10px 16px;
-  border-radius: 6px;
-  margin-bottom: 16px;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  margin-bottom: 1rem;
 }
 
 .alert.error {
-  background: #fee2e2;
-  color: #b91c1c;
+  background: var(--danger-soft);
+  color: var(--danger-color);
+  border: 1px solid rgba(220, 38, 38, 0.12);
 }
 
 .alert.success {
-  background: #dcfce7;
-  color: #15803d;
+  background: var(--success-soft);
+  color: var(--success-color);
+  border: 1px solid rgba(31, 157, 102, 0.12);
 }
 
 .loading-state {
   text-align: center;
-  padding: 60px;
-  color: #64748b;
+  padding: 4rem 1rem;
+  color: var(--muted-text-color);
 }
 
-mat-chip.draft { background: #f1f5f9; color: #64748b; }
+mat-chip.draft { background: #e2e8f0; color: #475569; }
 mat-chip.submitted { background: #dbeafe; color: #1d4ed8; }
 mat-chip.needs_correction { background: #fef3c7; color: #b45309; }
 mat-chip.approved { background: #dcfce7; color: #15803d; }
+
+@media (max-width: 700px) {
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-header,
+  .comment-actions,
+  .decision-buttons {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

@@ -8,6 +8,10 @@ import { WeeklyReportComponent } from './components/reports/weekly-report/weekly
 import { ReportHistoryComponent } from './components/reports/report-history/report-history';
 import { ReportDetailComponent } from './components/reports/report-detail/report-detail';
 import { ManagerReviewComponent } from './components/reports/manager-review/manager-review';
+import { TeamReportsComponent } from './components/reports/team-reports/team-reports';
+import { UserListComponent } from './components/users/user-list/user-list';
+import { ProjectListComponent } from './components/projects/project-list/project-list';
+
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -23,7 +27,10 @@ export const routes: Routes = [
       { path: 'reports/history', component: ReportHistoryComponent },
       { path: 'reports/detail/:id', component: ReportDetailComponent },
       { path: 'reports/review/:id', component: ManagerReviewComponent },
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'reports/team', component: TeamReportsComponent },
+      { path: 'users', component: UserListComponent },
+      { path: 'projects', component: ProjectListComponent },
+     
     ],
   },
   { path: '**', redirectTo: '/login' },

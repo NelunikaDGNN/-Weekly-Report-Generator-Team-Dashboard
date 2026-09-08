@@ -1,0 +1,117 @@
+.dashboard-page {
+  max-width: 1200px;
+}
+
+.subtitle {
+  color: #64748b;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.week-picker {
+  width: 220px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.summary-card {
+  padding: 20px;
+  text-align: center;
+}
+
+.summary-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.summary-label {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+.summary-card.warn .summary-value {
+  color: #b45309;
+}
+
+.summary-card.danger .summary-value {
+  color: #b91c1c;
+}
+
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.chart-card {
+  padding: 20px;
+  height: 320px;
+}
+
+.chart-card h3 {
+  margin: 0 0 12px 0;
+}
+
+.chart-card canvas {
+  max-height: 250px;
+}
+
+.activity-card {
+  padding: 20px;
+  margin-bottom: 40px;
+}
+
+.activity-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.activity-main {
+  flex: 1;
+}
+
+.activity-date {
+  color: #94a3b8;
+  font-size: 0.8rem;
+}
+
+.empty-text {
+  color: #94a3b8;
+  text-align: center;
+  padding: 20px;
+}
+
+.alert.error {
+  padding: 10px 16px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 60px;
+  color: #64748b;
+}
+
+mat-chip.draft { background: #f1f5f9; color: #64748b; }
+mat-chip.submitted { background: #dbeafe; color: #1d4ed8; }
+mat-chip.needs_correction { background: #fef3c7; color: #b45309; }
+mat-chip.approved { background: #dcfce7; color: #15803d; }

@@ -1,1 +1,56 @@
-<p>project-list works!</p>
+<div class="projects-page">
+  <div class="page-header">
+    <h2>Projects</h2>
+    <button mat-flat-button color="primary" *ngIf="authService.isManager()" (click)="openCreateForm()">
+      <mat-icon>add</mat-icon> New Project
+    </button>
+  </div>
+
+  <div class="alert error" *ngIf="errorMessage()">{{ errorMessage() }}</div>
+  <div class="alert success" *ngIf="successMessage()">{{ successMessage() }}</div>
+
+  <!-- Create/Edit Form -->
+  <mat-card class="form-card" *ngIf="showForm()">
+    <h3>{{ editingProject() ? 'Edit Project' : 'New Project' }}</h3>
+    <form [formGroup]="projectForm">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description" rows="2"></textarea>
+      </mat-form-field>
+
+      <div class="form-actions">
+        <button mat-stroked-button type="button" (click)="cancelForm()">Cancel</button>
+        <button mat-flat-button color="primary" type="button" (click)="saveProject()">
+          {{ editingProject() ? 'Save Changes' : 'Create Project' }}
+        </button>
+      </div>
+    </form>
+  </mat-card>
+
+  <div class="loading-state" *ngIf="loading()">Loading projects...</div>
+
+  <div class="empty-state" *ngIf="!loading() && projects().length === 0">
+    No projects yet.
+  </div>
+
+  <div class="project-grid" *ngIf="!loading() && projects().length > 0">
+    <mat-card class="project-card" *ngFor="let project of projects()">
+      <h3>{{ project.name }}</h3>
+      <p class="description">{{ project.description || 'No description' }}</p>
+
+      <div class="card-actions" *ngIf="authService.isManager()">
+        <button mat-icon-button (click)="openEditForm(project)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="deleteProject(project)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </mat-card>
+  </div>
+</div>

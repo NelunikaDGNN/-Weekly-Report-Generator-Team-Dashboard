@@ -1,18 +1,213 @@
+/* =========================================================
+   NAVBAR / TOOLBAR
+   ========================================================= */
+
+.mat-toolbar.mat-primary {
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--text-color);
+
+  min-height: 72px;
+  padding: 0 1.5rem;
+
+  border-bottom: 1px solid var(--border-color);
+
+  box-shadow: 0 1px 0 rgba(148, 163, 184, 0.15);
+
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+
+/* =========================================================
+   BRAND
+   ========================================================= */
 
 .brand {
   font-size: 1.15rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: #0f2742;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+
+  color: var(--text-color);
+
+  white-space: nowrap;
 }
+
+
+/* =========================================================
+   SPACER
+   ========================================================= */
 
 .spacer {
   flex: 1 1 auto;
 }
 
+
+/* =========================================================
+   USER NAME
+   ========================================================= */
+
 .user-name {
-  margin-right: 12px;
-  font-weight: 500;
-  font-size: 0.9rem;
-  color: #1e293b;
+  margin-right: 0.75rem;
+
+  font-size: 0.92rem;
+  font-weight: 600;
+
+  color: var(--text-color);
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   ROLE CHIP
+   MANAGER / TEAM_MEMBER
+   Plain span — no Material chip internals to fight, so no
+   stray border can appear in either state.
+   ========================================================= */
+
+/* =========================================================
+   ROLE CHIP
+   MANAGER / TEAM_MEMBER
+   Plain span — no Material chip internals to fight, so no
+   stray border can appear in either state.
+   ========================================================= */
+
+.mat-toolbar .role-chip {
+  display: inline-flex;
+  align-items: center;
+
+  margin-right: 0.75rem;
+  padding: 0.6rem 1rem;
+  min-height: 40px;
+
+  border-radius: 999px;
+
+  background: var(--primary-soft);
+  color: var(--primary-color);
+
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+
+  border: none;
+  outline: none;
+  box-shadow: none;
+  box-sizing: border-box;
+}
+
+.mat-toolbar .role-chip--manager {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+/* =========================================================
+   LOGOUT BUTTON
+   ========================================================= */
+
+/*
+   Logout is intentionally bordered.
+*/
+
+.mat-toolbar .logout-button {
+  min-height: 40px;
+
+  padding: 0 1rem;
+
+  border: 1px solid var(--border-color) !important;
+
+  border-radius: 12px;
+
+  background: transparent;
+
+  color: var(--text-color);
+
+  font-weight: 600;
+
+  outline: none;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+/* =========================================================
+   LOGOUT ICON
+   ========================================================= */
+
+.mat-toolbar .logout-button mat-icon {
+  margin-right: 0.35rem;
+}
+
+
+/* =========================================================
+   LOGOUT HOVER
+   ========================================================= */
+
+.mat-toolbar .logout-button:hover {
+  background: var(--primary-soft);
+
+  border-color: var(--primary-color) !important;
+
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================================================
+   LOGOUT FOCUS
+   ========================================================= */
+
+.mat-toolbar .logout-button:focus-visible {
+  outline: 2px solid var(--primary-color);
+
+  outline-offset: 2px;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 640px) {
+
+  .mat-toolbar.mat-primary {
+    min-height: 64px;
+
+    padding: 0 0.85rem;
+  }
+
+
+  /* Brand */
+
+  .brand {
+    font-size: 1rem;
+  }
+
+
+  /* Hide username on small screens */
+
+  .user-name {
+    display: none;
+  }
+
+
+  /* Role chip */
+
+  .mat-toolbar .role-chip {
+    margin-right: 0.5rem;
+
+    font-size: 0.8rem;
+  }
+
+
+  /* Logout */
+
+  .mat-toolbar .logout-button {
+    min-height: 38px;
+
+    padding: 0 0.75rem;
+  }
 }
