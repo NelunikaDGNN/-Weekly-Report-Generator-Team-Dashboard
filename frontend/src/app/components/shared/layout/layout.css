@@ -1,0 +1,16 @@
+.sidenav-container {
+  height: 100vh;
+  background: #f8fafc;
+}
+
+::ng-deep .mat-sidenav-content {
+  padding: 0 !important;
+  background: #f8fafc;
+}
+
+.content {
+  min-height: calc(100vh - 64px);
+  padding: 32px 40px;
+  background: #f8fafc;
+  box-sizing: border-box;
+}

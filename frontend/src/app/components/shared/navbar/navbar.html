@@ -1,1 +1,11 @@
-<p>navbar works!</p>
+<mat-toolbar color="primary">
+  <span class="brand">Weekly Report System</span>
+  <span class="spacer"></span>
+  <ng-container *ngIf="authService.currentUser() as user">
+    <span class="user-name">{{ user.name }}</span>
+    <mat-chip [highlighted]="user.role === 'MANAGER'">{{ user.role }}</mat-chip>
+    <button mat-stroked-button (click)="logout()">
+      <mat-icon>logout</mat-icon> Logout
+    </button>
+  </ng-container>
+</mat-toolbar>

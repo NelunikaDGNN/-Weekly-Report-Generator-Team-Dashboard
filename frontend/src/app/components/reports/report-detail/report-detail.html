@@ -1,1 +1,131 @@
-<p>report-detail works!</p>
+<div class="detail-page" *ngIf="!loading(); else loadingBlock">
+
+  <div class="alert error" *ngIf="errorMessage()">{{ errorMessage() }}</div>
+
+  <ng-container *ngIf="report() as r">
+
+    <div class="page-header">
+      <div>
+        <h2>Weekly Report</h2>
+        <p class="subtitle">{{ r.user?.name }} — {{ r.project?.name }}</p>
+      </div>
+      <mat-chip [ngClass]="r.status.toLowerCase()">{{ r.status.replace('_', ' ') }}</mat-chip>
+    </div>
+
+    <div class="review-comment" *ngIf="r.currentReviewComment">
+      <mat-icon>info</mat-icon>
+      <div>
+        <strong>Manager feedback:</strong>
+        <p>{{ r.currentReviewComment }}</p>
+      </div>
+    </div>
+
+    <mat-card class="section-card">
+      <h3>Overview</h3>
+      <div class="info-grid">
+        <div><span class="label">Week</span> {{ r.weekStartDate | date }} - {{ r.weekEndDate | date }}</div>
+        <div><span class="label">Project</span> {{ r.project?.name }}</div>
+        <div><span class="label">Submitted by</span> {{ r.user?.name }} ({{ r.user?.email }})</div>
+      </div>
+      <p *ngIf="r.optionalNotes"><span class="label">Notes</span> {{ r.optionalNotes }}</p>
+    </mat-card>
+
+    <mat-card class="section-card" *ngIf="r.tasksCompleted?.length">
+      <h3>Tasks Completed</h3>
+      <div class="task-item" *ngFor="let task of r.tasksCompleted">
+        <div class="task-header">
+          <strong>{{ task.taskName }}</strong>
+          <mat-chip class="priority-chip">{{ task.priority }}</mat-chip>
+        </div>
+        <div class="task-meta">
+          <span>{{ task.status }}</span>
+          <span>Planned {{ task.plannedPercentage }}% / Actual {{ task.actualPercentage }}%</span>
+          <span>{{ task.timeSpentHours }}h spent of {{ task.timePlannedHours }}h planned</span>
+        </div>
+        <p *ngIf="task.outputDeliverable" class="output">Output: {{ task.outputDeliverable }}</p>
+        <mat-divider></mat-divider>
+      </div>
+    </mat-card>
+
+    <mat-card class="section-card" *ngIf="r.tasksPlanned?.length">
+      <h3>Planned for Next Week</h3>
+      <ul>
+        <li *ngFor="let task of r.tasksPlanned">
+          {{ task.description }} <mat-chip class="priority-chip">{{ task.priority }}</mat-chip>
+        </li>
+      </ul>
+    </mat-card>
+
+    <mat-card class="section-card" *ngIf="r.blockers?.length">
+      <h3>Blockers / Challenges</h3>
+      <ul>
+        <li *ngFor="let b of r.blockers" [class.key-item]="b.isKeyIssue">
+          {{ b.description }} <span *ngIf="b.isKeyIssue" class="key-tag">Key Issue</span>
+        </li>
+      </ul>
+    </mat-card>
+
+    <mat-card class="section-card" *ngIf="r.achievements?.length">
+      <h3>Achievements / Highlights</h3>
+      <ul>
+        <li *ngFor="let a of r.achievements" [class.key-item]="a.isKeyAchievement">
+          {{ a.description }} <span *ngIf="a.isKeyAchievement" class="key-tag">Key Achievement</span>
+        </li>
+      </ul>
+    </mat-card>
+
+    <mat-card class="section-card" *ngIf="r.hourBreakdown?.length">
+      <h3>Hours by Task Type</h3>
+      <div class="hours-list">
+        <span *ngFor="let h of r.hourBreakdown" class="hour-chip">{{ h.taskType }}: {{ h.hours }}h</span>
+      </div>
+    </mat-card>
+
+    <mat-card class="section-card" *ngIf="versions().length > 0">
+      <div class="section-header">
+        <h3>Version History</h3>
+        <button mat-stroked-button (click)="toggleVersions()">
+          {{ showVersions() ? 'Hide' : 'Show' }} ({{ versions().length }})
+        </button>
+      </div>
+
+      <div *ngIf="showVersions()">
+        <div class="version-item" *ngFor="let v of versions()">
+          <div class="version-header">
+            <strong>Version {{ v.versionNumber }}</strong>
+            <span class="version-date">{{ v.submittedAt | date:'medium' }}</span>
+          </div>
+          <p><span class="label">Reviewer</span> {{ v.reviewer?.name }}</p>
+          <p><span class="label">Comment</span> {{ v.managerComment }}</p>
+        </div>
+      </div>
+    </mat-card>
+
+    <div class="actions-bar">
+      <button mat-stroked-button (click)="router.navigate(['/reports/history'])">
+        <mat-icon>arrow_back</mat-icon> Back
+      </button>
+      <button
+        mat-flat-button
+        color="primary"
+        *ngIf="authService.isManager() && r.status === 'SUBMITTED'"
+        (click)="goToReview()"
+      >
+        Review This Report
+      </button>
+      <button
+        mat-flat-button
+        color="primary"
+        *ngIf="isOwner() && (r.status === 'DRAFT' || r.status === 'NEEDS_CORRECTION')"
+        (click)="router.navigate(['/reports/my-report', r.id])"
+      >
+        Edit Report
+      </button>
+    </div>
+
+  </ng-container>
+</div>
+
+<ng-template #loadingBlock>
+  <div class="loading-state">Loading report...</div>
+</ng-template>

@@ -1,1 +1,46 @@
-<p>report-history works!</p>
+<div class="history-page">
+  <h2>My Report History</h2>
+
+  <div class="alert error" *ngIf="errorMessage()">{{ errorMessage() }}</div>
+
+  <div class="loading-state" *ngIf="loading()">Loading reports...</div>
+
+  <div class="empty-state" *ngIf="!loading() && reports().length === 0">
+    <p>You haven't created any reports yet.</p>
+    <button mat-flat-button color="primary" (click)="router.navigate(['/reports/my-report'])">
+      Create Your First Report
+    </button>
+  </div>
+
+  <table mat-table [dataSource]="reports()" *ngIf="!loading() && reports().length > 0" class="reports-table">
+
+    <ng-container matColumnDef="week">
+      <th mat-header-cell *matHeaderCellDef>Week</th>
+      <td mat-cell *matCellDef="let report">{{ formatWeek(report) }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="project">
+      <th mat-header-cell *matHeaderCellDef>Project</th>
+      <td mat-cell *matCellDef="let report">{{ report.project?.name ?? '—' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Status</th>
+      <td mat-cell *matCellDef="let report">
+        <mat-chip [ngClass]="report.status.toLowerCase()">{{ report.status.replace('_', ' ') }}</mat-chip>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let report">
+        <button mat-stroked-button (click)="viewReport(report.id)">
+          <mat-icon>visibility</mat-icon> View
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

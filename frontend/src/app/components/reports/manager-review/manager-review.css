@@ -1,0 +1,152 @@
+.review-page {
+  max-width: 900px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.subtitle {
+  color: #64748b;
+  margin: 4px 0 0;
+}
+
+.section-card {
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.label {
+  display: block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: #94a3b8;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.task-item {
+  margin-bottom: 12px;
+}
+
+.task-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.task-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.output {
+  font-size: 0.85rem;
+  color: #475569;
+  font-style: italic;
+}
+
+.priority-chip {
+  font-size: 0.7rem;
+  min-height: 20px;
+}
+
+ul {
+  padding-left: 20px;
+  margin: 0;
+}
+
+li {
+  margin-bottom: 6px;
+}
+
+.key-item {
+  font-weight: 600;
+}
+
+.key-tag {
+  font-size: 0.7rem;
+  background: #fef3c7;
+  color: #b45309;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-left: 6px;
+}
+
+.hours-list {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.hour-chip {
+  background: #f1f5f9;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+}
+
+.review-actions-card {
+  border: 2px solid #3b82f6;
+}
+
+.decision-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.comment-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.actions-bar {
+  margin-top: 24px;
+  margin-bottom: 40px;
+}
+
+.alert {
+  padding: 10px 16px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+
+.alert.error {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.alert.success {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 60px;
+  color: #64748b;
+}
+
+mat-chip.draft { background: #f1f5f9; color: #64748b; }
+mat-chip.submitted { background: #dbeafe; color: #1d4ed8; }
+mat-chip.needs_correction { background: #fef3c7; color: #b45309; }
+mat-chip.approved { background: #dcfce7; color: #15803d; }

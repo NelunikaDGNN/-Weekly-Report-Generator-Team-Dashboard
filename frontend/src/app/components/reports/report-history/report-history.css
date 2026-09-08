@@ -1,0 +1,33 @@
+.history-page {
+  max-width: 900px;
+}
+
+.reports-table {
+  width: 100%;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.alert.error {
+  padding: 10px 16px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.loading-state, .empty-state {
+  text-align: center;
+  padding: 60px;
+  color: #64748b;
+}
+
+.empty-state button {
+  margin-top: 16px;
+}
+
+mat-chip.draft { background: #f1f5f9; color: #64748b; }
+mat-chip.submitted { background: #dbeafe; color: #1d4ed8; }
+mat-chip.needs_correction { background: #fef3c7; color: #b45309; }
+mat-chip.approved { background: #dcfce7; color: #15803d; }

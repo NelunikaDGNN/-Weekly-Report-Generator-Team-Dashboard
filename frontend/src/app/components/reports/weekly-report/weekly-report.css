@@ -1,0 +1,29 @@
+.report-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 16px 0;
+}
+
+.page-header h2 {
+  margin: 0;
+}
+
+.section-card {
+  padding: 20px;
+  margin: 0 0 20px 0;
+}
+
+.section-card h3 {
+  margin: 0 0 12px 0;
+}
+
+::ng-deep .section-card .mat-mdc-card-content {
+  padding: 0 !important;
+}

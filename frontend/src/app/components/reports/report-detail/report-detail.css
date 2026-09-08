@@ -1,0 +1,159 @@
+.detail-page {
+  max-width: 900px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.subtitle {
+  color: #64748b;
+  margin: 4px 0 0;
+}
+
+.review-comment {
+  display: flex;
+  gap: 10px;
+  background: #fef3c7;
+  border: 1px solid #fbbf24;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+
+.section-card {
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.label {
+  display: block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: #94a3b8;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.task-item {
+  margin-bottom: 12px;
+}
+
+.task-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.task-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.output {
+  font-size: 0.85rem;
+  color: #475569;
+  font-style: italic;
+}
+
+.priority-chip {
+  font-size: 0.7rem;
+  min-height: 20px;
+}
+
+ul {
+  padding-left: 20px;
+  margin: 0;
+}
+
+li {
+  margin-bottom: 6px;
+}
+
+.key-item {
+  font-weight: 600;
+}
+
+.key-tag {
+  font-size: 0.7rem;
+  background: #fef3c7;
+  color: #b45309;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-left: 6px;
+}
+
+.hours-list {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.hour-chip {
+  background: #f1f5f9;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+}
+
+.version-item {
+  padding: 12px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.version-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.version-date {
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+.actions-bar {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+  margin-bottom: 40px;
+}
+
+.alert.error {
+  padding: 10px 16px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 60px;
+  color: #64748b;
+}
+
+mat-chip.draft { background: #f1f5f9; color: #64748b; }
+mat-chip.submitted { background: #dbeafe; color: #1d4ed8; }
+mat-chip.needs_correction { background: #fef3c7; color: #b45309; }
+mat-chip.approved { background: #dcfce7; color: #15803d; }

@@ -1,1 +1,251 @@
-<p>weekly-report works!</p>
+<div class="report-page" *ngIf="!loading(); else loadingBlock">
+
+  <div class="page-header">
+    <h2>{{ reportId ? 'Edit Weekly Report' : 'New Weekly Report' }}</h2>
+    <span class="status-badge" *ngIf="currentReport() as r" [ngClass]="r.status.toLowerCase()">
+      {{ r.status.replace('_', ' ') }}
+    </span>
+  </div>
+
+  <div class="review-comment" *ngIf="currentReport()?.currentReviewComment">
+    <mat-icon>info</mat-icon>
+    <div>
+      <strong>Manager feedback:</strong>
+      <p>{{ currentReport()?.currentReviewComment }}</p>
+    </div>
+  </div>
+
+  <div class="alert error" *ngIf="errorMessage()">{{ errorMessage() }}</div>
+  <div class="alert success" *ngIf="successMessage()">{{ successMessage() }}</div>
+
+  <form [formGroup]="reportForm">
+
+    <!-- Basic Info -->
+    <mat-card class="section-card">
+      <h3>Report Details</h3>
+      <div class="row">
+        <mat-form-field appearance="outline">
+          <mat-label>Project</mat-label>
+          <mat-select formControlName="projectId">
+            <mat-option *ngFor="let p of projects()" [value]="p.id">{{ p.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Week Start</mat-label>
+          <input matInput type="date" formControlName="weekStartDate" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Week End</mat-label>
+          <input matInput type="date" formControlName="weekEndDate" />
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Optional Notes / Links</mat-label>
+        <textarea matInput formControlName="optionalNotes" rows="2"></textarea>
+      </mat-form-field>
+    </mat-card>
+
+    <!-- Tasks Completed -->
+    <mat-card class="section-card">
+      <div class="section-header">
+        <h3>Tasks Completed</h3>
+        <button mat-stroked-button type="button" (click)="addTaskCompleted()" [disabled]="!isEditable()">
+          <mat-icon>add</mat-icon> Add Task
+        </button>
+      </div>
+
+      <div formArrayName="tasksCompleted">
+        <div class="task-row" *ngFor="let task of tasksCompleted.controls; let i = index" [formGroupName]="i">
+          <div class="row">
+            <mat-form-field appearance="outline">
+              <mat-label>Task Name</mat-label>
+              <input matInput formControlName="taskName" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Priority</mat-label>
+              <mat-select formControlName="priority">
+                <mat-option *ngFor="let p of priorities" [value]="p">{{ p }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Status</mat-label>
+              <input matInput formControlName="status" />
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <mat-form-field appearance="outline">
+              <mat-label>Planned %</mat-label>
+              <input matInput type="number" formControlName="plannedPercentage" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Actual %</mat-label>
+              <input matInput type="number" formControlName="actualPercentage" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Time Planned (hrs)</mat-label>
+              <input matInput type="number" formControlName="timePlannedHours" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Time Spent (hrs)</mat-label>
+              <input matInput type="number" formControlName="timeSpentHours" />
+            </mat-form-field>
+          </div>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Output / Deliverable</mat-label>
+            <input matInput formControlName="outputDeliverable" />
+          </mat-form-field>
+
+          <button mat-icon-button color="warn" type="button" (click)="removeAt(tasksCompleted, i)" [disabled]="!isEditable()">
+            <mat-icon>delete</mat-icon>
+          </button>
+          <mat-divider *ngIf="i < tasksCompleted.length - 1"></mat-divider>
+        </div>
+      </div>
+    </mat-card>
+
+    <!-- Tasks Planned -->
+    <mat-card class="section-card">
+      <div class="section-header">
+        <h3>Tasks Planned for Next Week</h3>
+        <button mat-stroked-button type="button" (click)="addTaskPlanned()" [disabled]="!isEditable()">
+          <mat-icon>add</mat-icon> Add Task
+        </button>
+      </div>
+
+      <div formArrayName="tasksPlanned">
+        <div class="inline-row" *ngFor="let task of tasksPlanned.controls; let i = index" [formGroupName]="i">
+          <mat-form-field appearance="outline" class="flex-grow">
+            <mat-label>Description</mat-label>
+            <input matInput formControlName="description" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Priority</mat-label>
+            <mat-select formControlName="priority">
+              <mat-option *ngFor="let p of priorities" [value]="p">{{ p }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <button mat-icon-button color="warn" type="button" (click)="removeAt(tasksPlanned, i)" [disabled]="!isEditable()">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </mat-card>
+
+    <!-- Blockers -->
+    <mat-card class="section-card">
+      <div class="section-header">
+        <h3>Blockers / Challenges</h3>
+        <button mat-stroked-button type="button" (click)="addBlocker()" [disabled]="!isEditable()">
+          <mat-icon>add</mat-icon> Add Blocker
+        </button>
+      </div>
+
+      <div formArrayName="blockers">
+        <div class="inline-row" *ngFor="let blocker of blockers.controls; let i = index" [formGroupName]="i">
+          <mat-checkbox
+            [checked]="blocker.get('isKeyIssue')?.value"
+            (change)="setKeyIssue(i)"
+            [disabled]="!isEditable()"
+            matTooltip="Mark as key issue for the week"
+          ></mat-checkbox>
+
+          <mat-form-field appearance="outline" class="flex-grow">
+            <mat-label>Description</mat-label>
+            <input matInput formControlName="description" />
+          </mat-form-field>
+
+          <button mat-icon-button color="warn" type="button" (click)="removeAt(blockers, i)" [disabled]="!isEditable()">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </mat-card>
+
+    <!-- Achievements -->
+    <mat-card class="section-card">
+      <div class="section-header">
+        <h3>Achievements / Highlights</h3>
+        <button mat-stroked-button type="button" (click)="addAchievement()" [disabled]="!isEditable()">
+          <mat-icon>add</mat-icon> Add Achievement
+        </button>
+      </div>
+
+      <div formArrayName="achievements">
+        <div class="inline-row" *ngFor="let achievement of achievements.controls; let i = index" [formGroupName]="i">
+          <mat-checkbox
+            [checked]="achievement.get('isKeyAchievement')?.value"
+            (change)="setKeyAchievement(i)"
+            [disabled]="!isEditable()"
+            matTooltip="Mark as key achievement for the week"
+          ></mat-checkbox>
+
+          <mat-form-field appearance="outline" class="flex-grow">
+            <mat-label>Description</mat-label>
+            <input matInput formControlName="description" />
+          </mat-form-field>
+
+          <button mat-icon-button color="warn" type="button" (click)="removeAt(achievements, i)" [disabled]="!isEditable()">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </mat-card>
+
+    <!-- Hour Breakdown -->
+    <mat-card class="section-card">
+      <div class="section-header">
+        <h3>Hours by Task Type <span class="optional-label">(optional)</span></h3>
+        <button mat-stroked-button type="button" (click)="addHourBreakdown()" [disabled]="!isEditable()">
+          <mat-icon>add</mat-icon> Add
+        </button>
+      </div>
+
+      <div formArrayName="hourBreakdown">
+        <div class="inline-row" *ngFor="let hour of hourBreakdown.controls; let i = index" [formGroupName]="i">
+          <mat-form-field appearance="outline">
+            <mat-label>Task Type</mat-label>
+            <mat-select formControlName="taskType">
+              <mat-option *ngFor="let t of taskTypes" [value]="t">{{ t }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Hours</mat-label>
+            <input matInput type="number" formControlName="hours" />
+          </mat-form-field>
+
+          <button mat-icon-button color="warn" type="button" (click)="removeAt(hourBreakdown, i)" [disabled]="!isEditable()">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </mat-card>
+
+    <!-- Actions -->
+    <div class="actions-bar" *ngIf="isEditable()">
+      <button mat-stroked-button type="button" (click)="saveDraft()" [disabled]="loading()">
+        Save as Draft
+      </button>
+      <button mat-flat-button color="primary" type="button" (click)="submitReport()" [disabled]="loading() || !reportId">
+        Submit for Review
+      </button>
+    </div>
+
+  </form>
+</div>
+
+<ng-template #loadingBlock>
+  <div class="loading-state">Loading report...</div>
+</ng-template>
