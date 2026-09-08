@@ -1,6 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
@@ -28,8 +29,13 @@ export class ReportDetailComponent implements OnInit {
     private route: ActivatedRoute,
     public router: Router,
     private reportService: ReportService,
-    public authService: AuthService
+    public authService: AuthService,
+    private location: Location
+
   ) {}
+  goBack(): void {
+  this.location.back();
+}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');

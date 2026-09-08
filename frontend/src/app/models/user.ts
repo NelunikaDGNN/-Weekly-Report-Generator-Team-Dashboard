@@ -24,3 +24,10 @@ export interface RegisterRequest {
   name: string;
   role?: Role;
 }
+
+export interface UserStats {
+  totalReports: number;
+  approvedCount: number;
+  needsCorrectionCount: number;
+  openBlockers: number;
+}

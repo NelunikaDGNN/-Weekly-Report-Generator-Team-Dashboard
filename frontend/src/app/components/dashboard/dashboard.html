@@ -1,1 +1,113 @@
-<p>dashboard works!</p>
+<div class="dashboard-page">
+
+  <!-- Team Member View -->
+  <ng-container *ngIf="!authService.isManager()">
+    <h2>Welcome, {{ authService.currentUser()?.name }}</h2>
+    <p class="subtitle">Use the sidebar to manage your weekly reports.</p>
+  </ng-container>
+
+  <!-- Manager Dashboard -->
+  <ng-container *ngIf="authService.isManager()">
+
+    <div class="page-header">
+      <h2>Team Dashboard</h2>
+      <mat-form-field appearance="outline" class="week-picker">
+        <mat-label>Week starting</mat-label>
+        <input matInput [matDatepicker]="picker" [ngModel]="selectedWeek()" (ngModelChange)="selectedWeek.set($event); onWeekChange()" />
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <div class="alert error" *ngIf="errorMessage()">{{ errorMessage() }}</div>
+
+    <div class="loading-state" *ngIf="loading()">Loading dashboard...</div>
+
+    <ng-container *ngIf="!loading()">
+
+      <!-- Summary Cards -->
+      <div class="summary-grid" *ngIf="summary() as s">
+        <mat-card class="summary-card">
+          <div class="summary-value">{{ s.totalReportsSubmitted }} / {{ s.totalMembers }}</div>
+          <div class="summary-label">Reports Submitted</div>
+        </mat-card>
+
+        <mat-card class="summary-card">
+          <div class="summary-value">{{ s.complianceRate }}%</div>
+          <div class="summary-label">Compliance Rate</div>
+        </mat-card>
+
+        <mat-card class="summary-card warn">
+          <div class="summary-value">{{ s.needsCorrectionCount }}</div>
+          <div class="summary-label">Needs Correction</div>
+        </mat-card>
+
+        <mat-card class="summary-card danger">
+          <div class="summary-value">{{ s.openBlockersCount }}</div>
+          <div class="summary-label">Open Blockers</div>
+        </mat-card>
+      </div>
+
+      <!-- Charts Row 1 -->
+      <div class="chart-grid">
+        <mat-card class="chart-card">
+          <h3>Tasks Completed Trend</h3>
+          <canvas baseChart
+            [data]="trendChartData()"
+            [options]="trendChartOptions"
+            type="line">
+          </canvas>
+        </mat-card>
+
+        <mat-card class="chart-card">
+          <h3>Report Status by Member</h3>
+          <canvas baseChart
+            [data]="statusChartData()"
+            [options]="statusChartOptions"
+            type="bar">
+          </canvas>
+        </mat-card>
+      </div>
+
+      <!-- Charts Row 2 -->
+      <div class="chart-grid">
+        <mat-card class="chart-card">
+          <h3>Workload by Project</h3>
+          <canvas baseChart
+            [data]="workloadChartData()"
+            [options]="workloadChartOptions"
+            type="bar">
+          </canvas>
+        </mat-card>
+
+        <mat-card class="chart-card">
+          <h3>Time by Task Type</h3>
+          <canvas baseChart
+            [data]="timeChartData()"
+            [options]="timeChartOptions"
+            type="doughnut">
+          </canvas>
+        </mat-card>
+      </div>
+
+      <!-- Recent Activity -->
+      <mat-card class="activity-card">
+        <h3>Recent Activity</h3>
+        <div class="activity-list" *ngIf="recentActivity().length > 0; else noActivity">
+          <div class="activity-row" *ngFor="let a of recentActivity()">
+            <div class="activity-main">
+              <strong>{{ a.memberName }}</strong> — {{ a.projectName }}
+            </div>
+            <mat-chip [ngClass]="a.status.toLowerCase()">{{ a.status.replace('_', ' ') }}</mat-chip>
+            <span class="activity-date">{{ a.updatedAt | date:'short' }}</span>
+          </div>
+        </div>
+        <ng-template #noActivity>
+          <p class="empty-text">No recent activity.</p>
+        </ng-template>
+      </mat-card>
+
+    </ng-container>
+  </ng-container>
+
+</div>

@@ -1,0 +1,69 @@
+<div class="team-reports-page">
+  <div class="page-header">
+    <h2>Team reports</h2>
+  </div>
+
+  <div class="alert error" *ngIf="errorMessage()">{{ errorMessage() }}</div>
+
+  <div class="filter-bar">
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Team member</mat-label>
+      <mat-select [ngModel]="memberId()" (ngModelChange)="memberId.set($event); onFilterChange()">
+        <mat-option value="">All members</mat-option>
+        <mat-option *ngFor="let m of members()" [value]="m.id">{{ m.name }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Project</mat-label>
+      <mat-select [ngModel]="projectId()" (ngModelChange)="projectId.set($event); onFilterChange()">
+        <mat-option value="">All projects</mat-option>
+        <mat-option *ngFor="let p of projects()" [value]="p.id">{{ p.name }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Status</mat-label>
+      <mat-select [ngModel]="status()" (ngModelChange)="status.set($event); onFilterChange()">
+        <mat-option value="">All statuses</mat-option>
+        <mat-option *ngFor="let s of statusOptions" [value]="s">{{ s.replace('_', ' ') }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field filter-field--date">
+      <mat-label>Week starting</mat-label>
+      <input matInput type="date" [ngModel]="weekStartDate()" (ngModelChange)="weekStartDate.set($event); onFilterChange()" />
+    </mat-form-field>
+
+    <button mat-stroked-button class="clear-button" (click)="clearFilters()">
+      <mat-icon>filter_alt_off</mat-icon> Clear
+    </button>
+  </div>
+
+  <div *ngIf="loading()" class="loading-state">Loading team reports...</div>
+
+  <div *ngIf="!loading() && reports().length === 0" class="empty-state">
+    No reports match these filters.
+  </div>
+
+  <div class="report-list" *ngIf="!loading()">
+    <div class="report-row" *ngFor="let r of reports()" (click)="openReport(r.id)">
+      <div class="report-row-avatar">{{ r.user?.name?.charAt(0) }}</div>
+
+      <div class="report-row-main">
+        <div class="report-row-name">{{ r.user?.name }}</div>
+        <div class="report-row-meta">
+          <span class="project-name">{{ r.project?.name }}</span>
+          <span class="dot">•</span>
+          <span class="week-range">{{ r.weekStartDate | date }} – {{ r.weekEndDate | date }}</span>
+        </div>
+      </div>
+
+      <span class="status-chip" [ngClass]="r.status.toLowerCase()">
+        {{ r.status.replace('_', ' ') }}
+      </span>
+
+      <mat-icon class="chevron">chevron_right</mat-icon>
+    </div>
+  </div>
+</div>
